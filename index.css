@@ -1,0 +1,58 @@
+*{
+    margin: 0 auto;
+    padding: 0;
+}
+
+#components{
+    width: 200px;
+    height: 100vh;
+    float: left;
+    background-color: green;
+    overflow: auto;
+}
+
+.component{
+    width: 99px; 
+    height: 99px;
+    float: left;
+    background-color: white;
+    text-align: center;
+}
+
+.component:hover{
+    background-color: orange;
+    color: white;
+    cursor:pointer;
+}
+
+#view{
+    border: 1px solid black;
+}
+
+#canvas{
+    border: 1px solid black;
+    float: left;
+}
+
+.static {
+    cursor: not-allowed;
+}
+.draggable {
+    cursor: move;
+}
+
+.rectDashed{
+    stroke: black;
+    stroke-dasharray: 1;
+    fill: transparent;
+}
+
+imageRotateSVG{
+    stroke: black;
+    stroke-width: 1;
+    fill: transparent;
+    background-image: url(icons/refresh.png);
+}
+
+
+
