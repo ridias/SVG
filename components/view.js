@@ -5,6 +5,8 @@ window.onload = function(){
     let view = viewObject.getView()
     let circle1 = new Circle(50, 50, 30)
     let circle2 = new Circle(200, 200, 40)
+    document.getElementById("x").innerHTML = 200
+    document.getElementById("y").innerHTML = 200
     circle1.addText("Text")
     circle2.addText("Text")
     view.appendChild(circle1.getCircle())
@@ -94,6 +96,12 @@ ViewProject.prototype.getCursorPoints = function(event){
 
 function moving(element, towardsX, towardsY){
     let xy = element.attributes["rotate_dashed"].value.split(" ")
+    //element.setAttribute("translation", (towardsX - xy[0]) + " " + (towardsY - xy[1]))
+    //element.setAttribute("rotate_dashed", (towardsX - xy[0])+ " " +  (towardsY - xy[1]))
+    let outputX = document.getElementById("x")
+    let outputY = document.getElementById("y")
+    outputX.innerHTML = towardsX + " y el resto es de " + (towardsX - xy[0])
+    outputY.innerHTML = towardsY + " y el resto es de " + (towardsY - xy[1])
     //element.setAttribute("translation", "" + (towardsX - xy[0]) + " " + (towardsY - xy[1]))
     element.setAttribute("transform", "translate(" + (towardsX - xy[0]) + " " + (towardsY - xy[1]) + ")")
 }
