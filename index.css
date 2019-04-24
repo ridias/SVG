@@ -3,6 +3,11 @@
     padding: 0;
 }
 
+svg{
+    border: 1px solid black
+}
+
+
 #components{
     width: 200px;
     height: 100vh;

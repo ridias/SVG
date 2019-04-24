@@ -1,34 +1,40 @@
 
 var Circle = function(cx, cy, radius, svg){
-    this.svg = svg
     this.x = cx
     this.y = cy
     this.radius = radius
     this.name = "circle"
-    this.circle = document.createElementNS("http://www.w3.org/2000/svg", "g")
-    this.rectangleDashed = document.createElementNS("http://www.w3.org/2000/svg", "g")
-    this.pos = -1
+    this.component = document.createElementNS("http://www.w3.org/2000/svg", "g")
+    this.circle = createCircle(this.x, this.y, this.radius, "white")
+    //this.rectangleDashed = document.createElementNS("http://www.w3.org/2000/svg", "g")
+    this.svg = svg
     this.pointsCTM = this.svg.createSVGPoint()
     this.circleClicked = false
     this.isMoving = false
     this.isRotating = false
     this.isResizing = false
 
-    this.circle.appendChild(createCircle(this.x, this.y, this.radius, "black"))
+    this.component.appendChild(this.circle)
 
-    this.circle.addEventListener("click", showLimits.bind(this))
-    this.circle.addEventListener("mousedown", setupAction.bind(this))
+
+
+
+    /*this.circle.addEventListener("mousedown", setupAction.bind(this))
     this.circle.addEventListener("mousemove", executeAction.bind(this))
     this.circle.addEventListener("mouseup", stopAction.bind(this))
-    this.circle.addEventListener("mouseleave", stopAction.bind(this))
+    this.circle.addEventListener("mouseleave", stopAction.bind(this))*/
 
 }
+
+Circle.prototype.setPosition = function(posArray){ this.circle.setAttribute("posArray", posArray)}
 
 Circle.prototype.getName = function() { return this.name }
 Circle.prototype.getCx = function() { return this.x }
 Circle.prototype.getCy = function() { return this.y }
 Circle.prototype.getRadius = function() { return this.radius }
 Circle.prototype.getCircle = function() { return this.circle }
+Circle.prototype.getPosition = function() { return this.circle.attributes["posArray"].value}
+
 
 
 Circle.prototype.getLimits = function(){
@@ -65,23 +71,35 @@ Circle.prototype.setLimitsFourPoints = function(){
 }
 
 Circle.prototype.moveTo = function(cursorX, cursorY){
-    this.circle.setAttribute("transform", "translate(" + (cursorX - this.x) + " " + (cursorY - this.y) + ")")
+    console.log(cursorX)
+    console.log(cursorY)
+    //this.circle.setAttribute("transform", "translate(" + (cursorX - this.x) + " " + (cursorY - this.y) + ")")
+    //this.x += (cursorX - this.x)
+    //this.y += (cursorY - this.y)
+    this.circle.setAttribute("cx", cursorX)
+    this.circle.setAttribute("cy", cursorY)
 }
 
 Circle.prototype.rotate = function(cursorX, cursorY){
+    console.log("X: " + this.x)
+    console.log("Y: " + this.y)
+
     let angle = Math.atan2(cursorY - this.y, cursorX - this.x)
     let degrees = angle * 180 / Math.PI + 90;
     this.circle.setAttribute("transform", "rotate(" + degrees + " " + this.x + " " + this.y +  ")")
 }
 
-Circle.prototype.resizing = function(){
-    //I don't know yet how I will do it
+Circle.prototype.getSuperParentNode = function(){
+    let component = this.circle
+    while(component.parentNode.tagName !== "svg"){
+        component = component.parentNode
+    }
+    this.svg = component.parentNode
 }
 
 
 function showLimits(){
     if(!this.circleClicked){
-        this.circle.setAttribute("selected", "true")
         this.setRectangleDashed()
         this.circle.appendChild(this.rectangleDashed)
         this.circleClicked = true
@@ -94,8 +112,15 @@ function showLimits(){
 
 
 function setupAction(event){
+    console.log("Estoy en setupAction de circulo")
+    console.log(event)
     if(event.target.attributes["tag_action"] == undefined){
         this.isMoving = true
+        this.circleClicked = true
+        if(this.circle.childNodes[this.circle.childNodes.length - 1].childNodes.length < 1){
+            this.setRectangleDashed()
+            this.circle.appendChild(this.rectangleDashed)
+        }
     }else if(event.target.attributes["tag_action"].value == "rotating"){
         this.isRotating = true
         let cursorPoint = this.pointsCTM.matrixTransform(this.svg.getScreenCTM().inverse())

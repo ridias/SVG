@@ -1,15 +1,19 @@
 var Circle = function(x, y, radius){
     this.name = "circle"
     this.circle = document.createElementNS("http://www.w3.org/2000/svg", "g")
-    this.circle.setAttribute("rotation", "0")
-    this.circle.setAttribute("translation", "" + x + " " + y )
     this.circleClicked = false
     this.group = document.createElementNS("http://www.w3.org/2000/svg", "g")
     this.x = x
     this.y = y
     this.r = radius
-    this.circle.appendChild(createCircle(x, y, radius, "white"))
-    this.circle.addEventListener("click", showLimits.bind(this))
+    this.circle.setAttribute("origin", x + " " + y)
+    this.circle.setAttribute("translation_remain", "0 0")
+    this.circle.setAttribute("degrees", "0")
+    this.circle.setAttribute("rotate_dashed", x + " " + y)
+    this.circle.setAttribute("role", "main")
+    this.circle.appendChild(createCircle(x, y, radius, "transparent"))
+
+    this.circle.addEventListener("mousedown", showLimits.bind(this))
 }
 
 Circle.prototype.getCircle = function(){
@@ -21,8 +25,8 @@ Circle.prototype.getLimits = function(){
 }
 
 Circle.prototype.setLimits = function(){
-    let limits = this.getLimits()
-    let x = limits[0], y = limits[1], width = limits[2], height = limits[3]
+    limits = this.getLimits()
+    x = limits[0], y = limits[1], width = limits[2], height = limits[3]
     this.setLimitsFourPoints()
     this.group.appendChild(createPoint(width / 2 + x, y, 4, "blue"))
     this.group.appendChild(createPoint(x, height / 2 + y, 4, "blue"))
@@ -31,8 +35,8 @@ Circle.prototype.setLimits = function(){
 }
 
 Circle.prototype.setLimitsFourPoints = function(){
-    let limits = this.getLimits()
-    let x = limits[0], y = limits[1], width = limits[2], height = limits[3]
+    limits = this.getLimits()
+    x = limits[0], y = limits[1], width = limits[2], height = limits[3]
     this.group.appendChild(createRectDashed(x, y, width, height, "rectDashed"))
     this.group.appendChild(createPoint(x, y, 4, "blue"))
     this.group.appendChild(createPoint(x + width, y, 4, "blue"))
@@ -42,7 +46,6 @@ Circle.prototype.setLimitsFourPoints = function(){
     let rotation = createCircle(width / 2 + x, y - 25, 4, "blue")
     rotation.setAttribute("tag_action", "rotating")
     this.group.appendChild(rotation)
-    this.circle.setAttribute("rotate_dashed", "" + (width / 2 + x) + " " + (height / 2 + y))
 }
 
 Circle.prototype.removeLimits = function(){
@@ -52,6 +55,7 @@ Circle.prototype.removeLimits = function(){
 Circle.prototype.addText = function(value){
     let text = createText(this.x + 30, this.y + 30, value)
     this.circle.appendChild(text)
+    
 }
 
 function showLimits(){
@@ -60,11 +64,11 @@ function showLimits(){
         this.setLimits()
         this.circle.appendChild(this.group)
         this.circleClicked = true
-    }else{
+    }/*else{
         this.circle.setAttribute("selected", "false")
         this.removeLimits()
         this.circleClicked = false
-    }
+    }*/
 }
 
 
